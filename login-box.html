@@ -1,0 +1,178 @@
+<!--
+Copyright (c) 2014 muiis Authors. All rights reserved.
+
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-overlay/core-overlay.html"><!--
+<link rel="import" href="../polymer-gestures/polymer-gestures.html">-->
+
+<!--
+
+
+-->
+
+<polymer-element name="login-box" attributes="opened autoCloseDisabled">
+  <template>
+
+    <link rel="stylesheet" href="login-box.css">
+    <style>
+
+    </style>
+
+    <core-overlay id="overlay" layered backdrop opened="{{opened}}" autoCloseDisabled="{{autoCloseDisabled}}"  transition="core-transition-center"></core-overlay>
+    <header>How do you want to log in?</header>
+    <section hide="" id="local">
+      <div id="error">{{error}}</div>
+      <form>
+        <input type="email" pattern="^(.)+@[A-Za-z0-9]([A-Za-z0-9\.-]*[A-Za-z0-9])?\.[A-Za-z]{1,13}$" name="email" id="email" placeholder="Email address" value="{{email}}">
+        <input type="password" name="password" id="password" placeholder="Password" maxlength="30" class="{{doForgot}}" value="{{password}}">
+        <div class="{{doForgot}} {{doCreate}} forgot-wrap">
+          <div id="rwrap">
+            <input type="checkbox" name="remember" id="remember" checked="checked"><label for="remember">Keep me logged in</label>
+          </div>
+          <a id="forgot" on-click="{{setForgot}}">Forgot password?</a>
+        </div>
+        <div id="swipe" class="">
+          <button type="submit" id="action" on-click="{{doAction}}" onclick="return false;">{{action}}</button>
+        </div>
+        <button type="reset" id="back" on-click="{{resetForm}}" class="{{doForgot}} {{doCreate}}">Back</button>
+      </form>
+    </section>
+    <section hide="" id="oauth">
+      <content></content>
+    </section>
+    <footer>
+      <p>
+        Don’t have an account? <a on-click="{{setCreate}}">Create an account</a>
+      </p>
+    </footer>
+  </template>
+  <script>
+  (function() {
+
+    var swipe = {
+      max: 222,
+
+      translate: function(dx) {
+        this.style.transform =
+        this.style.mozTransform =
+        this.style.webkitTransform =
+          'translate(' + dx + 'px, 0px)';
+      },
+      trackstart: function(element, event) {
+        //console.warn('trackStart', this, arguments);
+        //element.className = element.className.replace(/\s*swipe-end\s*/, '');
+        element.className += ' swipe-active';
+        element.style.transitionDuration = '0s';
+      },
+      track: function(element, event) {
+        var dx = event.dx > 0 ? ( event.dx < swipe.max ? event.dx : swipe.max ) : 0;
+        //console.warn('track', this, arguments);
+        this._srotate = 540 / swipe.max * dx;
+        swipe.translate.call(element, dx);
+
+        element.className = element.className.replace(/\s*swipe-eol\s*/g, '');
+        if ( dx >= swipe.max )
+          element.className += ' swipe-eol';
+      },
+      trackend: function(element, event) {
+        //console.warn('trackEnd', this, arguments);
+        if ( event.dx >= swipe.max ) {
+
+        }
+        else {
+          element.style.transitionDuration = '';
+          this._srotate = 0;
+          swipe.translate.call(element, 0);
+
+          element.className = element.className.replace(/\s*swipe-active\s*/g, '');
+        }
+      },
+      tap: function() {
+        console.warn('tap', this, arguments);
+      }
+    };
+
+    Polymer('login-box', {
+      _srotate: 0,
+
+      error: '',
+      action: 'Log in',
+      doForgot: '',
+      doCreate: '',
+
+      email: '',
+      password: '',
+
+      observe: {
+        email: 'validate',
+        password: 'validate',
+        error: 'showError'
+      },
+
+      showError: function(oval, nval) {
+        if ( nval )
+          this.$.error.className = 'fade-in';
+        else
+          this.$.error.className = '';
+      },
+
+      validate: function(oval, nval) {
+        console.warn(arguments);
+      },
+
+      doAction: function() {
+        if ( this.$.email.value === '' ) {
+          this.error = 'Email is required';
+        }
+        else if ( this.$.password.value === '' ) {
+          this.error = 'Password is required';
+        }
+      },
+
+      resetForm: function() {
+        this.$.swipe.className = '';
+
+        this.error = '';
+        this.action = 'Log in';
+        this.doForgot = this.doCreate = '';
+      },
+
+      setForgot: function() {
+        this.error = '';
+        this.action = 'Swipe to remember.';
+        this.doForgot = 'fade-out';
+        this.$.swipe.className = 'swipe';
+      },
+      setCreate: function() {
+        this.error = '';
+        this.action = 'Create account';
+        this.doCreate = 'fade-out';
+        this.doForgot = '';
+        this.$.swipe.className = 'swipe';
+      },
+
+      ready: function() {
+        this.$.overlay.target = this;
+      },
+
+      attached: function() {
+        var listen = function(element, event) {
+          element.addEventListener(event, swipe[event].bind(this, element));
+        }.bind(this, this.$.action);
+
+        listen('trackstart');
+        listen('track');
+        listen('trackend');
+        listen('tap');
+      },
+
+      toggle: function() {
+        this.$.overlay.toggle();
+      }
+    });
+
+  })();
+  </script>
+</polymer-element>

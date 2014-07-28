@@ -1,0 +1,8 @@
+{
+  "name": "login-box",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master",
+    "core-overlay": "Polymer/core-overlay#master"
+  }
+}
