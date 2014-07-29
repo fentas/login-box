@@ -268,6 +268,8 @@ button[type="reset"].fade-out {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   box-shadow: inset 0px 1px 2px 0px rgba(0,0,0, .05);
+
+  user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
 }
 .swipe > button {
   transition: all 0.5s ease-in-out;
@@ -309,11 +311,6 @@ button[type="reset"].fade-out {
   left: -50%;
   z-index: -1;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RjgwRURDNDMzQTI4MTFFMjlCODZGQzk3RDhCRTBDRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RjgwRURDNDQzQTI4MTFFMjlCODZGQzk3RDhCRTBDRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGODBFREM0MTNBMjgxMUUyOUI4NkZDOTdEOEJFMENEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGODBFREM0MjNBMjgxMUUyOUI4NkZDOTdEOEJFMENEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgYmT1QAAABbSURBVHjaYvz//z8DJYCRagYwMjKSpBFuMYiB5IrDQHwbiBOAmJmQAWB9aAb8R8J4DSLGALwGkWIAVoPIMQCGD1BqwEm6e4HsQCQrGteRmpAoTsrUM4BcABBgAHpTzzf9rmArAAAAAElFTkSuQmCC) center center no-repeat;
-  -webkit-transform: rotate({{_srotate}}deg);
-  -moz-transform: rotate({{_srotate}}deg);
-  -ms-transform: rotate({{_srotate}}deg);
-  -o-transform: rotate({{_srotate}}deg);
-  transform: rotate({{_srotate}}deg);
 }
 .swipe > button.swipe-active:before {
   -webkit-animation-play-state: paused;
@@ -327,6 +324,7 @@ button[type="reset"].fade-out {
   -ms-transform: rotate(0deg);
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
+
   -webkit-animation-play-state: running;
   -moz-animation-play-state: running;
   -o-animation-play-state: running;
@@ -337,7 +335,7 @@ button[type="reset"].fade-out {
   box-shadow: none;
 }
 .swipe:after {
-  content: "{{action}}";
+  content: attr(swipe-text);
   position: absolute;
   z-index: 0;
   text-align: center;
