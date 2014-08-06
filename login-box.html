@@ -19,32 +19,36 @@ Copyright (c) 2014 muiis Authors. All rights reserved.
     <style type="text/css" id="rotate"></style>
 
     <core-overlay id="overlay" layered backdrop opened="{{opened}}" autoCloseDisabled="{{autoCloseDisabled}}"  transition="core-transition-center"></core-overlay>
-    <header>How do you want to log in?</header>
-    <section hide="" id="local">
-      <div id="error">{{error}}</div>
-      <form>
-        <input type="email" pattern="^(.)+@[A-Za-z0-9]([A-Za-z0-9\.-]*[A-Za-z0-9])?\.[A-Za-z]{1,13}$" name="email" id="email" placeholder="Email address" value="{{email}}">
-        <input type="password" name="password" id="password" placeholder="Password" maxlength="30" class="{{doForgot}}" value="{{password}}">
-        <div class="{{doForgot}} {{doCreate}} forgot-wrap">
-          <div id="rwrap">
-            <input type="checkbox" name="remember" id="remember" checked="checked"><label for="remember">Keep me logged in</label>
-          </div>
-          <a id="forgot" on-click="{{setForgot}}">Forgot password?</a>
-        </div>
-        <div id="swipe" class="" swipe-text="{{action}}">
-          <button type="submit" id="action" on-click="{{doAction}}" onclick="return false;">{{action}}</button>
-        </div>
-        <button type="reset" id="back" on-click="{{resetForm}}" class="{{doForgot}} {{doCreate}}">Back</button>
-      </form>
-    </section>
-    <section hide="" id="oauth">
-      <content></content>
-    </section>
-    <footer>
-      <p>
-        Don’t have an account? <a on-click="{{setCreate}}">Create an account</a>
-      </p>
-    </footer>
+    <div vertical layout>
+      <header>How do you want to log in?</header>
+      <div horizontal layout flex>
+        <section hide="" id="local" flex one>
+          <div id="error">{{error}}</div>
+          <form>
+            <input type="email" pattern="^(.)+@[A-Za-z0-9]([A-Za-z0-9\.-]*[A-Za-z0-9])?\.[A-Za-z]{1,13}$" name="email" id="email" placeholder="Email address" value="{{email}}">
+            <input type="password" name="password" id="password" placeholder="Password" maxlength="30" class="{{doForgot}}" value="{{password}}">
+            <div class="{{doForgot}} {{doCreate}} forgot-wrap">
+              <div id="rwrap">
+                <input type="checkbox" name="remember" id="remember" checked="checked"><label for="remember">Keep me logged in</label>
+              </div>
+              <a id="forgot" on-click="{{setForgot}}">Forgot password?</a>
+            </div>
+            <div id="swipe" class="" swipe-text="{{action}}">
+              <button type="submit" id="action" on-click="{{doAction}}" onclick="return false;">{{action}}</button>
+            </div>
+            <button type="reset" id="back" on-click="{{resetForm}}" class="{{doForgot}} {{doCreate}}">Back</button>
+          </form>
+        </section>
+        <section hide="" id="oauth" flex one>
+          <content></content>
+        </section>
+      </div>
+      <footer>
+        <p>
+          Don’t have an account? <a on-click="{{setCreate}}">Create an account</a>
+        </p>
+      </footer>
+    </div>
   </template>
   <script>
   (function() {
@@ -164,8 +168,11 @@ Copyright (c) 2014 muiis Authors. All rights reserved.
       },
 
       attached: function() {
-        var listen = function(element, event) {
-          element.addEventListener(event, swipe[event].bind(this, element));
+        var listen = function(element, to) {
+          element.addEventListener(to, function(event) {
+            if ( /swipe/.test(element.parentNode.className) )
+              swipe[to].call(this, element, event);
+          }.bind(this));
         }.bind(this, this.$.action);
 
         listen('trackstart');
